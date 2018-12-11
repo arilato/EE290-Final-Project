@@ -114,7 +114,7 @@ class binary_binary_decisions:
 		return self.r
 
 	def play(self, move1, move2):
-		return self.r[move1][move2]
+		return -1 * np.array(self.r[move1][move2])
 
 
 
@@ -132,33 +132,20 @@ class blotto_game:
 
 	def __init__(self):
 		self.soldiers = [100, 100]
-		self.games = 0
 
 	def get_state(self):
 		return [self.games] + self.soldiers
 
 	def play(self, move1, move2):
-		if self.games >= 10:
+		if sum(move1) > 100 or sum(move2) > 100:
 			return
 
-		move1 = min(self.soldiers[0], move1)
-		move2 = min(self.soldiers[1], move2)
-		self.soldiers[0] -= move1
-		self.soldiers[1] -= move2
+		tmp = 0
+		for i in range(10):
+			if move1[i] > move2[i]:
+				tmp += 1
+			elif move1[i] < move2[i]:
+				tmp += -1
+		
+		return [-1 * tmp, tmp]
 
-		return [self.soldiers[0] > self.soldiers[1], self.soldiers[1] > self.soldiers[0]]
-
-
-def a():
-	b = np.random.randint(6) + np.random.randint(6) + 2
-	if b == 4 or b == 9 or b == 16:
-		return 1
-	return 0
-
-s = 0
-n = 10000000
-for i in range(n):
-	s += a()
-
-print(s/n)
-print(7/36)
